@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { pageRoutes } from "./models/PageRoutes";
+import LoginPane from "./pages/auth/login/LoginPane";
+import SignupPane from "./pages/auth/signup/SignupPane";
+import auth from "./controllers/AuthController";
+import NotFound from "./NotFound";
+import Main from "./Main";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return (() => {
+    switch (auth.state()) {
+      case auth.AUTHENTICATED:
+        return <Main />;
+      case auth.SIGNUP_STAGE:
+        return (
+          // stage of signup e.g  enter email , password, fullname, or other relevant information
+          <SignupPane stage={auth.stage()} />
+        );
+      case auth.INITIAL:
+        return <LoginPane />;
+      default:
+        return <NotFound />;
+    }
+  })();
 }
 
 export default App;
