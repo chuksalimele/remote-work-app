@@ -23,6 +23,7 @@ export function avatarBgColor(name) {
 
 export function getPageUrl(name) {
   var r = pageRoutes.find((obj) => obj.name === name);
+  console.log(name, r);
   return r ? r.url : "UNKNOWN_URL";
 }
 export function userFullName(user, includeTitle) {

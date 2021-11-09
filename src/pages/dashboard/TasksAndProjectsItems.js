@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Masonry from "@mui/lab/Masonry";
-import { Divider, Link, Typography } from "@mui/material";
+import { Stack, Link, Typography } from "@mui/material";
 import { getPageUrl } from "../../util/Util";
 import BoardItem from "../../components/BoardItem";
 import { Link as RouterLink } from "react-router-dom";
@@ -19,7 +19,7 @@ export default function TasksAndProjectsItems(props) {
     <BoardItem
       header="Recend Task and Projects"
       contentRenderer={() => (
-        <div>
+        <Stack spacing={2}>
           <BoardItem
             items={recentTasks}
             maxShowItems={props.number}
@@ -45,7 +45,7 @@ export default function TasksAndProjectsItems(props) {
           <BoardItem
             items={recentProjects}
             maxShowItems={props.number}
-            showSeeMorePath={getPageUrl("Proects")}
+            showSeeMorePath={getPageUrl("Projects")}
             showSeeMoreLabel="Show Projects"
             headerRenderer={() => (
               <Typography variant="subtite2" component="div">
@@ -64,7 +64,7 @@ export default function TasksAndProjectsItems(props) {
               );
             }}
           />
-        </div>
+        </Stack>
       )}
       {...props}
     />

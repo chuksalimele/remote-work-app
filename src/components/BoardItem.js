@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import { isFunction, isObject, isString, getPageUrl } from "../util/Util";
+import { isFunction, isObject, isString } from "../util/Util";
 import { Link as RouterLink } from "react-router-dom";
 import { DoubleArrow } from "@mui/icons-material";
 export default function BoardItem(props) {
@@ -67,7 +67,7 @@ export default function BoardItem(props) {
       ) : null}
 
       {isString(showSeeMorePath) ? (
-        <Link component={RouterLink} to={getPageUrl(showSeeMorePath)}>
+        <Link component={RouterLink} to={showSeeMorePath}>
           {isString(showSeeMoreLabel) || isObject(showSeeMoreLabel) ? (
             showSeeMoreLabel
           ) : (
