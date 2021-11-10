@@ -21,7 +21,7 @@ const HOTKEYS = {
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
-export const ChatEditor = () => {
+export const MessageEditor = () => {
   const [value, setValue] = useState(initialValue);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);

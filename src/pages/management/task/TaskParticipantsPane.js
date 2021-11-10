@@ -11,7 +11,7 @@ import Select from "@mui/material/Select";
 import UserList from "../../../components/UserList";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Grid, Stack, Autocomplete, Chip, TextField } from "@mui/material";
-import CommentSection from "../../../components/CommentSection";
+import CommentSection from "../../../components/CommentsView";
 
 var participants = []; //TODO
 
