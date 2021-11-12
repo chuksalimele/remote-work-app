@@ -1,13 +1,11 @@
 import {
-  Done,
-  DoneAll,
   ThumbDownAlt,
   ThumbDownOffAlt,
   ThumbUpAlt,
   ThumbUpOffAlt,
 } from "@mui/icons-material";
-import { Badge, IconButton, Stack, Tooltip } from "@mui/material";
-import { blue, grey, red } from "@mui/material/colors";
+import { Badge, IconButton, Tooltip } from "@mui/material";
+import { blue } from "@mui/material/colors";
 
 export default function ReactionIconButton({ type, badgeText, byMe }) {
   var meColor = blue[400];

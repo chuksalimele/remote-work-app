@@ -42,3 +42,19 @@ export function getUserFullNameById(id, includeTitle) {
 export const isString = (v) => typeof v === "string";
 export const isFunction = (v) => typeof v === "function";
 export const isObject = (v) => typeof v === "object";
+
+export const randomPickN = (arr, pickCount) => {};
+
+export const randomPickOne = (arr) => {
+  return randomPickN(arr, 1)[0];
+};
+
+export const serialNumbers = (start, end) => {
+  var arr = [];
+  for (var i = start; i < end + 1; i++) {
+    arr.push(i);
+  }
+  return arr;
+};
+
+export const randomWords = (maxLeters, maxWords, character) => {};

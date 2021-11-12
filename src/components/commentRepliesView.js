@@ -3,13 +3,13 @@ import Moment from "react-moment";
 import moment from "moment";
 import CommonItem from "./CommonItem";
 import ShowMoreText from "react-show-more-text";
+import MsgIndicator from "./MsgIndicator";
 import { avatarBgColor, getUserById, getUserFullNameById } from "../util/Util";
 import ReactionIconButton from "./ReactionIconButton";
 import { Reply } from "@mui/icons-material";
 import { Avatar, Badge, Button, Divider, Stack } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { blueGrey, grey } from "@mui/material/colors";
-import MsgIndicator from "./MsgIndicator";
 
 var MAX_SHOW_LESS_LINES = 7;
 
@@ -34,6 +34,9 @@ var useStyles = makeStyles({
     padding: "5px",
     borderRadius: "2px",
     bacgroundColor: blueGrey[300],
+  },
+  ownerMessage: {
+    fontSize: "12px",
   },
   showMoreTextAnchor: {
     bacgroundColor: grey[600],
@@ -71,13 +74,13 @@ const calendarDiviiderStrings = {
   sameElse: "ll",
 };
 
-function CommentBubble({ comment }) {
-  var user = getUserById(comment.fromId);
+function CommentReplyBubble({ comment: reply }) {
+  var user = getUserById(reply.fromId);
   var appUserId = user.id;
   var fullName = user ? getUserFullNameById(appUserId) : "";
   var photoUrl = user ? user.photoUrl : "";
 
-  const classes = useStyles({ fullName, ...comment }); //pass the fullName as prop also to the style
+  const classes = useStyles({ fullName, ...reply }); //pass the fullName as prop also to the style
 
   var OnClickMessage = (evt) => {
     //
@@ -109,9 +112,9 @@ function CommentBubble({ comment }) {
           <Moment
             className={classes.time}
             calendar={calendarMsgStrings}
-            date={comment.time}
+            date={reply.time}
           />
-          <MsgIndicator status={comment.status} />
+          <MsgIndicator status={reply.status} />
         </Stack>
       }
       top={<div className={classes.fullName}>{fullName}</div>}
@@ -126,23 +129,23 @@ function CommentBubble({ comment }) {
           expanded={false}
           truncatedEndingComponent={"... "}
         >
-          {comment.message}
+          {reply.message}
         </ShowMoreText>
       }
       bottom={
         <Stack direction="row" spacing={2}>
-          {/** Click this button to like comment - a 'like' reaction of user */}
+          {/** Click this button to like reply - a 'like' reaction of user */}
           <ReactionIconButton
             type="like"
-            badgeText={comment.likeIds.length}
-            byMe={comment.likeIds.find((id) => id === appUserId)}
+            badgeText={reply.likes.length}
+            byMe={reply.likeIds.find((id) => id === appUserId)}
             onClick={OnClickLike}
           />
-          {/** Click this button to dislike comment - a 'dislike' reaction of user */}
+          {/** Click this button to dislike reply - a 'dislike' reaction of user */}
           <ReactionIconButton
             type="dislike"
-            badgeText={comment.dislikeIds.length}
-            byMe={comment.dislikeIds.find((id) => id === appUserId)}
+            badgeText={reply.dislikes.length}
+            byMe={reply.dislikeIds.find((id) => id === appUserId)}
             onClick={OnClickDislike}
           />
           {/** Show a list of users that clicked like or dislike botton */}
@@ -157,7 +160,7 @@ function CommentBubble({ comment }) {
             endIcon={
               <Badge
                 color="secondary"
-                badgeContent={comment.replyIds.length}
+                badgeContent={reply.replyIds.length}
                 max={999}
               >
                 <Reply />
@@ -172,26 +175,69 @@ function CommentBubble({ comment }) {
   );
 }
 
-export default function CommentsView({ comments }) {
+function OwnerCommentItem({ comment, expandComment }) {
+  var user = getUserById(comment.fromId);
+  var appUserId = user.id;
+  var fullName = user ? getUserFullNameById(appUserId) : "";
+  var photoUrl = user ? user.photoUrl : "";
+
+  const classes = useStyles({ fullName, ...reply }); //pass the fullName as prop also to the style
+
+  var replyCount = comment.replyIds.length;
+  return (
+    <Stack spacing={2} direction="column">
+      <Stack spacing={2} direction="row">
+        <Avatar className={classes.photo} src={photoUrl}>
+          {fullName ? fullName[0] : ""}
+        </Avatar>
+        <div className={classes.fullName}>{fullName}</div>
+        <Moment
+          className={classes.time}
+          calendar={calendarMsgStrings}
+          date={comment.time}
+        />
+      </Stack>
+      <ShowMoreText
+        lines={MAX_SHOW_LESS_LINES}
+        more="Show more >>"
+        less="<< Show less"
+        className={classes.ownerMessage}
+        anchorClass={classes.showMoreTextAnchor}
+        onClick={OnClickMessage}
+        expanded={expandComment}
+        truncatedEndingComponent={"... "}
+      >
+        {comment.message}
+      </ShowMoreText>
+      <Divider className={classes.dayDivider}>
+        {`${
+          replyCount === 1 ? `${replyCount} Reply` : `${replyCount} Replies`
+        } `}
+      </Divider>
+    </Stack>
+  );
+}
+
+export default function CommentRepliesView({ comment }) {
   const classes = useStyles();
+
+  var replies = getReplies(comment.replyIds);
 
   return (
     <Stack spacing={1} direction="column" className={classes.root}>
-      {comments.map((comment, index) => {
-        var MsgBubble = <CommentBubble comment={comment} />;
+      <OwnerCommentItem comment={comment} expandComment />
+      {replies.map((reply, index) => {
+        var MsgBubble = <CommentReplyBubble reply={reply} />;
 
-        var prevComment = comments[index - 1];
+        var prevReply = replies[index - 1];
         var TimeDivider = null;
-        if (
-          index === 0 ||
-          !moment(prevComment.time).isSame(comment.time, "day")
-        ) {
+        if (index === 0 || !moment(prevReply.time).isSame(index.time, "day")) {
           TimeDivider = (
             <Divider className={classes.dayDivider}>
               <Moment
                 className={classes.dayDividerTime}
                 calendar={calendarDiviiderStrings}
-                date={comment.time}
+                date={reply.time}
               />
             </Divider>
           );

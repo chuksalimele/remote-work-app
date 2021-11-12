@@ -10,10 +10,16 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import UserList from "../../../components/UserList";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Grid, Stack, Autocomplete, Chip, TextField } from "@mui/material";
-import CommentSection from "../../../components/CommentsView";
+import { Stack } from "@mui/material";
+import CommentsView from "../../../components/CommentsView";
+import { MessageEditor } from "../../../components/MessageEditor";
+import fakeComments from "../../../models/fake/FakeComments";
+import fakeCommentReplies from "../../../models/fake/FakeCommentReplies";
 
 var participants = []; //TODO
+
+var comments = fakeComments(60); //TODO - TESTING WITH FAKE FOR NOW
+var commentReplies = fakeCommentReplies(60); //TODO - TESTING WITH FAKE FOR NOW
 
 function ParticipantsSelect() {
   const [category, setCategory] = React.useState("all");
@@ -54,6 +60,15 @@ function ParticipantsPane() {
           return <MenuIcon />;
         }}
       />
+    </Stack>
+  );
+}
+
+function ParticipantsCommentPane() {
+  return (
+    <Stack spacing={0}>
+      <CommentsView comments={comments} sx={{ flexGrow: 1 }} />
+      <MessageEditor />
     </Stack>
   );
 }
@@ -99,7 +114,7 @@ export default function TaskParticipantsPane() {
   };
 
   return (
-    <Box sx={{ width: "100%" }} sx={{ m: 2 }}>
+    <Box sx={{ width: "100%", m: 2 }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -114,7 +129,7 @@ export default function TaskParticipantsPane() {
         <ParticipantsPane />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CommentSection />
+        <ParticipantsCommentPane />
       </TabPanel>
     </Box>
   );

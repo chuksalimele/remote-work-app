@@ -1,18 +1,12 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Masonry from "@mui/lab/Masonry";
 import { Stack, Link, Typography } from "@mui/material";
 import { getPageUrl } from "../../util/Util";
 import BoardItem from "../../components/BoardItem";
 import { Link as RouterLink } from "react-router-dom";
-import CommonItem from "../../components/CommonItem";
-import EventIcon from "@mui/icons-material/Event";
-import AlarmIcon from "@mui/icons-material/Alarm";
+import { FakeManagement } from "../../models/fake/FakeManagement";
 
-var recentTasks = [];
-var recentProjects = [];
+var recentTasks = FakeManagement.getProjects(20); //TODO - TESTING WITH FAKE FOR NOW
+var recentProjects = FakeManagement.getTasks(20); //TODO - TESTING WITH FAKE FOR NOW
 
 export default function TasksAndProjectsItems(props) {
   return (
@@ -31,9 +25,8 @@ export default function TasksAndProjectsItems(props) {
               </Typography>
             )}
             itemRenderer={(item) => {
-              {
-                /** item.url is the path to display the details of the particularr task */
-              }
+              /** item.url is the path to display the details of the particularr task */
+
               return (
                 <Link component={RouterLink} to={item.url}>
                   {item.name}
@@ -53,9 +46,8 @@ export default function TasksAndProjectsItems(props) {
               </Typography>
             )}
             itemRenderer={(item) => {
-              {
-                /** item.url is the path to display the details of the particularr project */
-              }
+              /** item.url is the path to display the details of the particularr project */
+
               return (
                 <Link component={RouterLink} to={item.url}>
                   {item.name}

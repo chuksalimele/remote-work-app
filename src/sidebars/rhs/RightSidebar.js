@@ -1,11 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import MailIcon from "@mui/icons-material/Mail";
-import { IconButton, ListItem, Stack, Toolbar, Tooltip } from "@mui/material";
+import { IconButton, Stack, Toolbar, Tooltip } from "@mui/material";
 import { RightMenuData } from "../../models/RightMenuData";
-import { HomeOutlined } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { getPageUrl, invertBgColor } from "../../util/Util";
 import { Link } from "react-router-dom";

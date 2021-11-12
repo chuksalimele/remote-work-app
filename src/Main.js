@@ -6,8 +6,6 @@ import RightSidebar from "./sidebars/rhs/RightSidebar";
 import MainAppBar from "./appbar/MainAppBar";
 import LeftSidebarMini from "./sidebars/lhs/LeftSidebarMini";
 import Collapse from "@mui/material/Collapse";
-import { useRef } from "react";
-import { useEffect } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { pageRoutes } from "./models/PageRoutes";
 import { Divider, IconButton, Stack, Tooltip, Typography } from "@mui/material";

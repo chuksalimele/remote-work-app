@@ -1,6 +1,4 @@
 import "./App.css";
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import { pageRoutes } from "./models/PageRoutes";
 import LoginPane from "./pages/auth/login/LoginPane";
 import SignupPane from "./pages/auth/signup/SignupPane";
 import auth from "./controllers/AuthController";

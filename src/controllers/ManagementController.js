@@ -1,7 +1,5 @@
-import { Close, LinkedCameraOutlined } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import Done from "@mui/icons-material/Done";
-import MailItem from "../components/MailItem";
-import SignatoryProgressBar from "../components/SignatoryProgressBar";
 import UserItem from "../components/UserItem";
 import { getUserById, getProjectById } from "../util/Util";
 import Button from "@mui/material/Button";

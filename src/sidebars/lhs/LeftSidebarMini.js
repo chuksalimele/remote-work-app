@@ -3,8 +3,6 @@ import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { LeftMenuData } from "../../models/LeftMenuData";
 import { ListItem, Tooltip } from "@mui/material";
 import { ChevronRight } from "@mui/icons-material";

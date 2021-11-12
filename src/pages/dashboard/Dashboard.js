@@ -1,9 +1,6 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Masonry from "@mui/lab/Masonry";
-import { Divider, Link, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import TasksAndProjectsItems from "./TasksAndProjectsItems";
 import RecentLinksItems from "./RecentLinksItems";
 import EventsAndRemindersItems from "./EventsAndRemindersItems";

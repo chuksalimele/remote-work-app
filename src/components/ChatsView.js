@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Avatar, Stack } from "@mui/material";
+import { Avatar, Stack, Divider } from "@mui/material";
 import Moment from "react-moment";
 import moment from "moment";
 import CommonItem from "./CommonItem";
@@ -7,15 +7,18 @@ import ShowMoreText from "react-show-more-text";
 import MsgIndicator from "./MsgIndicator";
 import auth from "../controllers/AuthController";
 import { avatarBgColor, getUserById, getUserFullNameById } from "../util/Util";
-import { makeStyles } from "@mui/material";
-import { blue, blueGrey } from "@mui/material/colors";
+import { makeStyles } from "@mui/styles";
+import { blue, blueGrey, grey } from "@mui/material/colors";
 
 var MAX_SHOW_LESS_LINES = 7;
 
 var useStyles = makeStyles({
   root: {
+    padding: "4px",
     overflow: "auto",
     width: "100%",
+    height: "100%",
+    backgroundColor: "green",
   },
   bubbleSent: {
     width: "75%",
@@ -35,11 +38,18 @@ var useStyles = makeStyles({
   },
   messageSent: {
     fontSize: "12px",
+    padding: "5px",
+    borderRadius: "2px",
     bacgroundColor: blue[300],
   },
   messageReceived: {
     fontSize: "12px",
+    padding: "5px",
+    borderRadius: "2px",
     bacgroundColor: blueGrey[300],
+  },
+  showMoreTextAnchor: {
+    bacgroundColor: grey[600],
   },
   photo: (prop) => ({
     background: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
@@ -90,7 +100,7 @@ function ChatSentBubble({ chat }) {
           more="Show more >>"
           less="<< Show less"
           className={classes.messageSent}
-          anchorClass="my-anchor-css-class"
+          anchorClass={classes.showMoreTextAnchor}
           onClick={OnClickMessage}
           expanded={false}
           truncatedEndingComponent={"... "}
@@ -138,7 +148,7 @@ function ChatReceivedBubble({ chat }) {
           more="Show more >>"
           less="<< Show less"
           className={classes.messageReceived}
-          anchorClass="my-anchor-css-class"
+          anchorClass={classes.showMoreTextAnchor}
           onClick={OnClickMessage}
           expanded={false}
           truncatedEndingComponent={"... "}
@@ -157,7 +167,7 @@ function ChatReceivedBubble({ chat }) {
   );
 }
 
-export default function ChatsView({ chats }) {
+export default function ChatsView({ sx, chats }) {
   const classes = useStyles();
 
   return (

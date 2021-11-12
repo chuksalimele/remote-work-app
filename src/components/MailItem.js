@@ -52,7 +52,7 @@ export default function MailItem({ mail, itemCategory }) {
           {/** this is only visible for sent mail */}
           {itemCategory === "sent" && mail.status === "read" ? (
             <DoneAllIcon color="green" fontSize="small" />
-          ) : itemCategory === "sent" && mail.status == "delivered" ? (
+          ) : itemCategory === "sent" && mail.status === "delivered" ? (
             <DoneAllIcon fontSize="small" />
           ) : itemCategory === "sent" && mail.status === "sent" ? (
             <DoneIcon fontSize="small" />

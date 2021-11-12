@@ -1,19 +1,15 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Masonry from "@mui/lab/Masonry";
-import { Divider, Link, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { getPageUrl } from "../../util/Util";
 import BoardItem from "../../components/BoardItem";
-import { Link as RouterLink } from "react-router-dom";
 import CommonItem from "../../components/CommonItem";
 import EventIcon from "@mui/icons-material/Event";
 import AlarmIcon from "@mui/icons-material/Alarm";
 import Moment from "react-moment";
 import moment from "moment";
+import fakeEventsAndReminders from "../../models/fake/FaleEventsAndReminders";
 
-var eventsAndReminders = [];
+var eventsAndReminders = fakeEventsAndReminders(20); //TODO - TESTING WITH FAKE FOR NOW
 
 moment.updateLocale("en", {
   calendar: {
