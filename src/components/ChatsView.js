@@ -18,15 +18,13 @@ var useStyles = makeStyles({
     overflow: "auto",
     width: "100%",
     height: "100%",
-    backgroundColor: "green",
   },
   bubbleSent: {
-    width: "75%",
-    marginRight: 0,
+    maxWidth: "75%",
   },
 
   bubbleReceived: {
-    width: "75%",
+    maxWidth: "75%",
     marginLeft: 0,
   },
   time: {
@@ -40,19 +38,20 @@ var useStyles = makeStyles({
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    bacgroundColor: blue[300],
+    backgroundColor: blue[300],
   },
   messageReceived: {
+    display: "inline",
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    bacgroundColor: blueGrey[300],
+    backgroundColor: blueGrey[300],
   },
   showMoreTextAnchor: {
-    bacgroundColor: grey[600],
+    backgroundColor: grey[600],
   },
   photo: (prop) => ({
-    background: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
+    backgroundColor: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
     width: "30px",
     height: "30px",
   }),
@@ -70,7 +69,7 @@ const calendarMsgStrings = {
   lastDay: "[Yesterday] LT",
   sameDay: "LT",
   nextDay: "[Tomorrow] LT",
-  lastWeek: "[last] dddd LT",
+  lastWeek: "[Last] dddd LT",
   nextWeek: "dddd LT",
   sameElse: "ll",
 };
@@ -79,7 +78,7 @@ const calendarDiviiderStrings = {
   lastDay: "[Yesterday]",
   sameDay: "[Today]",
   nextDay: "[Tomorrow]",
-  lastWeek: "[last] dddd",
+  lastWeek: "[Last] dddd",
   nextWeek: "dddd",
   sameElse: "ll",
 };
@@ -91,40 +90,52 @@ function ChatSentBubble({ chat }) {
     //
   };
   return (
-    <CommonItem
-      className={classes.bubbleSent}
-      top={
-        <ShowMoreText
-          /* Default options */
-          lines={MAX_SHOW_LESS_LINES}
-          more="Show more >>"
-          less="<< Show less"
-          className={classes.messageSent}
-          anchorClass={classes.showMoreTextAnchor}
-          onClick={OnClickMessage}
-          expanded={false}
-          truncatedEndingComponent={"... "}
-        >
-          {chat.message}
-        </ShowMoreText>
-      }
-      bottom={
-        <Stack direction="row" spacing={1}>
-          <Moment
-            className={classes.time}
-            calendar={calendarMsgStrings}
-            date={chat.time}
-          />
-          <MsgIndicator status={chat.status} />
-        </Stack>
-      }
-    />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+      }}
+    >
+      <CommonItem
+        className={classes.bubbleSent}
+        top={
+          <ShowMoreText
+            /* Default options */
+            lines={MAX_SHOW_LESS_LINES}
+            more="Show more >>"
+            less="<< Show less"
+            className={classes.messageSent}
+            anchorClass={classes.showMoreTextAnchor}
+            onClick={OnClickMessage}
+            expanded={false}
+            truncatedEndingComponent={"... "}
+          >
+            {chat.message}
+          </ShowMoreText>
+        }
+        bottom={
+          <Stack
+            direction="row"
+            sx={{ display: "flex", justifyContent: "flex-end", pr: "2px" }}
+          >
+            <Moment
+              className={classes.time}
+              calendar={calendarMsgStrings}
+              date={chat.time}
+            />
+            <MsgIndicator status={chat.status} />
+          </Stack>
+        }
+      />
+    </div>
   );
 }
 
 function ChatReceivedBubble({ chat }) {
   var user = getUserById(chat.fromId);
+
   var fullName = user ? getUserFullNameById(user.id) : "";
+
   var photoUrl = user ? user.photoUrl : "";
 
   const classes = useStyles({ fullName, ...chat }); //pass the fullName as prop also to the style
@@ -143,25 +154,25 @@ function ChatReceivedBubble({ chat }) {
       }
       top={<div className={classes.fullName}>{fullName}</div>}
       center={
-        <ShowMoreText
-          lines={MAX_SHOW_LESS_LINES}
-          more="Show more >>"
-          less="<< Show less"
-          className={classes.messageReceived}
-          anchorClass={classes.showMoreTextAnchor}
-          onClick={OnClickMessage}
-          expanded={false}
-          truncatedEndingComponent={"... "}
-        >
-          {chat.message}
-        </ShowMoreText>
+        <span>
+          <ShowMoreText
+            lines={MAX_SHOW_LESS_LINES}
+            more="Show more >>"
+            less="<< Show less"
+            className={classes.messageReceived}
+            anchorClass={classes.showMoreTextAnchor}
+            onClick={OnClickMessage}
+            expanded={false}
+            truncatedEndingComponent={"... "}
+          >
+            {chat.message}
+          </ShowMoreText>
+        </span>
       }
       bottom={
-        <Moment
-          className={classes.time}
-          calendar={calendarMsgStrings}
-          date={chat.time}
-        />
+        <Moment className={classes.time} calendar={calendarMsgStrings}>
+          {chat.time}
+        </Moment>
       }
     />
   );
@@ -174,10 +185,11 @@ export default function ChatsView({ sx, chats }) {
     <Stack spacing={1} direction="column" className={classes.root}>
       {chats.map((chat, index) => {
         var MsgBubble = null;
-        if (chat.fromId === auth.AuthUser.id) {
+
+        if (chat.fromId === auth.AuthUser().id) {
           //sent by the app user
           MsgBubble = <ChatSentBubble chat={chat} />;
-        } else if (chat.toId === auth.AuthUser.id) {
+        } else if (chat.toId === auth.AuthUser().id) {
           //sent to the app user
           MsgBubble = <ChatReceivedBubble chat={chat} />;
         } else {

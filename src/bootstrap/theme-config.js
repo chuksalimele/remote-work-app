@@ -3,6 +3,7 @@ import { ThemeConstants } from "./../util/ThemeConstants";
 
 var scrollbarCss = `::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background-color: inherit ;
@@ -18,7 +19,7 @@ var scrollbarCss = `::-webkit-scrollbar {
 
 const themeOptions = {
   palette: {
-    mode: "dark",
+    // mode: "dark",
     type: "light",
     primary: {
       main: ThemeConstants.lightThemePrimaryColor,

@@ -1,9 +1,11 @@
-export default function fakeRecentLinks(number) {
-  var arr = [];
-  for (var i = 0; i < number; i++) {
-    var obj = {};
-    arr.push(obj);
-  }
+import { randomPickN } from "../../util/Util";
+import { pageRoutes } from "../../models/PageRoutes";
 
-  return arr;
+export default function fakeRecentLinks(number) {
+  console.warn(
+    "WARNING!!",
+    "Calling fakeRecentLinks! Are you still testing? If not then please call appropriate function."
+  );
+
+  return randomPickN(pageRoutes, number);
 }

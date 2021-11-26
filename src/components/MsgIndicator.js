@@ -5,7 +5,7 @@ import ErrorOutlineSharp from "@mui/icons-material/ErrorOutlineSharp";
 import HourglassEmptySharp from "@mui/icons-material/HourglassEmptySharp";
 
 export default function MsgIndicator({ status }) {
-  var size = 6;
+  var size = 12;
   return status === "seen" ? (
     <DoneAll color={green[500]} sx={{ fontSize: size }} />
   ) : status === "delivered" ? (

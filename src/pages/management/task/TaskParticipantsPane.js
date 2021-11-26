@@ -14,12 +14,8 @@ import { Stack } from "@mui/material";
 import CommentsView from "../../../components/CommentsView";
 import { MessageEditor } from "../../../components/MessageEditor";
 import fakeComments from "../../../models/fake/FakeComments";
-import fakeCommentReplies from "../../../models/fake/FakeCommentReplies";
 
 var participants = []; //TODO
-
-var comments = fakeComments(60); //TODO - TESTING WITH FAKE FOR NOW
-var commentReplies = fakeCommentReplies(60); //TODO - TESTING WITH FAKE FOR NOW
 
 function ParticipantsSelect() {
   const [category, setCategory] = React.useState("all");
@@ -65,9 +61,49 @@ function ParticipantsPane() {
 }
 
 function ParticipantsCommentPane() {
+  var comments = fakeComments(60); //TODO - TESTING WITH FAKE FOR NOW
+
   return (
-    <Stack spacing={0}>
-      <CommentsView comments={comments} sx={{ flexGrow: 1 }} />
+    <Stack
+      spacing={0}
+      sx={{
+       width: "100%",
+        height: "400px",
+        overflow: "hidden",
+      }}
+    >
+      {/**
+      <div
+        style={{
+          backgroundColor: "blue",
+          width: "100%",
+          overflowY: "auto",
+        }}
+      >
+        START testing1 testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing testing testing testing testing
+        testing testing testing testing testing END
+      </div> */}
+
+      <CommentsView
+        comments={comments}
+        sx={{ height: "100%", overflowY: "auto" }}
+      />
+
       <MessageEditor />
     </Stack>
   );
@@ -82,13 +118,10 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ height: `100%`, width: "100%", overflow: "hidden" }}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
     </div>
   );
 }
@@ -114,7 +147,13 @@ export default function TaskParticipantsPane() {
   };
 
   return (
-    <Box sx={{ width: "100%", m: 2 }}>
+    <Box
+      sx={{
+        m: 2,
+        width: "400px",
+        overflow: "hidden",
+      }}
+    >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}

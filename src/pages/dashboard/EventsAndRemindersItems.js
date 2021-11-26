@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import { getPageUrl } from "../../util/Util";
 import BoardItem from "../../components/BoardItem";
 import CommonItem from "../../components/CommonItem";
@@ -7,24 +7,24 @@ import EventIcon from "@mui/icons-material/Event";
 import AlarmIcon from "@mui/icons-material/Alarm";
 import Moment from "react-moment";
 import moment from "moment";
-import fakeEventsAndReminders from "../../models/fake/FaleEventsAndReminders";
-
-var eventsAndReminders = fakeEventsAndReminders(20); //TODO - TESTING WITH FAKE FOR NOW
+import fakeEventsAndReminders from "../../models/fake/FakeEventsAndReminders";
 
 moment.updateLocale("en", {
   calendar: {
     lastDay: "[Yesterday at] LT",
     sameDay: "[Today at] LT",
     nextDay: "[Tomorrow at] LT",
-    lastWeek: "[last] dddd [at] LT",
+    lastWeek: "[Last] dddd [at] LT",
     nextWeek: "dddd [at] LT",
-    sameElse: "L",
+    sameElse: "ll",
   },
 });
 
-alert(moment.duration(123, "minutes").format("h [hrs], m [min]"));
+//alert(moment.duration(123, "minutes").format("h [hrs], m [min]"));
 
 export default function EventsAndRemindersItems(props) {
+  var eventsAndReminders = fakeEventsAndReminders(20); //TODO - TESTING WITH FAKE FOR NOW
+
   const formatEventStartTime = (time) => {
     return `Comes up  ${moment().calendar(time)}`;
   };
@@ -67,10 +67,11 @@ export default function EventsAndRemindersItems(props) {
                 {item.event.endTime > 0 ? (
                   <span>
                     {formatEventDuration(
-                      item.event.endTime - item.event.startTime
+                      (item.event.endTime - item.event.startTime) / 1000
                     )}
                   </span>
                 ) : null}
+                <Divider />
               </div>
             }
           />
@@ -83,10 +84,13 @@ export default function EventsAndRemindersItems(props) {
               </Typography>
             }
             bottom={
-              <Moment
-                date={item.event.startTime}
-                filter={formatUpcomingAlarm}
-              />
+              <div>
+                <Moment
+                  date={item.reminder.time}
+                  filter={formatUpcomingAlarm}
+                />
+                <Divider />
+              </div>
             }
           />
         ) : null;

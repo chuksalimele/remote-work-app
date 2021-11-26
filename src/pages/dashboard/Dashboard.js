@@ -8,14 +8,18 @@ import RecentActivitiesItems from "./RecentActivitiesItems";
 
 export default function Dashboard() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Stack direction="row" spacing={3} sx={{ flexGrow: 1, mt: 2 }}>
+    <Box sx={{ flexGrow: 1, maxHeight: "calc(100% - 25px)", overflow: "auto" }}>
+      <Stack
+        direction="row"
+        spacing={3}
+        sx={{ flexGrow: 1, mt: 2, maxHeight: "100%" }}
+      >
         <Stack spacing={3} sx={{ flexGrow: 1 }}>
           <TasksAndProjectsItems number={5} sx={{ minHeight: "100px" }} />
           <RecentLinksItems number={5} sx={{ minHeight: "100px" }} />
         </Stack>
         <Stack spacing={3} sx={{ flexGrow: 1 }}>
-          <RecentActivitiesItems number={12} sx={{ minHeight: "100px" }} />
+          <RecentActivitiesItems number={8} sx={{ minHeight: "100px" }} />
           <EventsAndRemindersItems number={8} sx={{ minHeight: "100px" }} />
         </Stack>
       </Stack>

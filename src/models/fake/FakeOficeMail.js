@@ -1,5 +1,10 @@
 export var FakeOfficeMail = {
-  getSuggestions(obj) {
+  fakeSuggestions(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeSuggestions! Are you still testing? If not then please call appropriate function."
+    );
+
     if (typeof obj === "number") {
       obj = { count: obj };
     }
@@ -16,14 +21,19 @@ export var FakeOfficeMail = {
         subject: "This is message subject or title",
         message: "This is a suggestion or innovation",
         attachmentIds: [3, 5, 8, 3], //attachements are files. each attachment must have a id for accessinng
-        time: new Date().getTime(),
+        time: new Date().fakeTime(),
       };
       objs.push(m);
     }
 
     return objs;
   },
-  getComplaints(obj) {
+  fakeComplaints(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeComplaints! Are you still testing? If not then please call appropriate function."
+    );
+
     if (typeof obj === "number") {
       obj = { count: obj };
     }
@@ -41,7 +51,7 @@ export var FakeOfficeMail = {
         message: "This is a complaint",
         correspondenceIds: [2, 8, 9, 2], //correspondences are messages exchange between two persons. each correspondence must have and id
         attachmentIds: [3, 5, 8, 3], //attachements are files. each attachment must have a id for accessinng
-        time: new Date().getTime(),
+        time: new Date().fakeTime(),
       };
       objs.push(m);
     }
@@ -49,7 +59,12 @@ export var FakeOfficeMail = {
     return objs;
   },
 
-  getMemos(obj) {
+  fakeMemos(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeMemos! Are you still testing? If not then please call appropriate function."
+    );
+
     if (typeof obj === "number") {
       obj = { count: obj };
     }
@@ -67,14 +82,19 @@ export var FakeOfficeMail = {
         subject: "This is message subject or title",
         message: "This is a memo",
         attachmentIds: [3, 5, 8, 3], //attachements are files. each attachment must have a id for accessinng
-        time: new Date().getTime(),
+        time: new Date().fakeTime(),
       };
       objs.push(m);
     }
 
     return objs;
   },
-  getQueries(obj) {
+  fakeQueries(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeQueries! Are you still testing? If not then please call appropriate function."
+    );
+
     if (typeof obj === "number") {
       obj = { count: obj };
     }
@@ -98,16 +118,26 @@ export var FakeOfficeMail = {
 
     return objs;
   },
-  getRequests(obj) {
-    return _getSignatoryDocuments0(
+  fakeRequests(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeRequests! Are you still testing? If not then please call appropriate function."
+    );
+
+    return _fakeSignatoryDocuments0(
       obj,
       true,
       ["initiate", "recommend", "approve"],
       [3, 6, 8]
     );
   },
-  getSignatoryDocuments(obj) {
-    return _getSignatoryDocuments0(
+  fakeSignatoryDocuments(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeSignatoryDocuments! Are you still testing? If not then please call appropriate function."
+    );
+
+    return _fakeSignatoryDocuments0(
       obj,
       true,
       ["initiate", "recommend", "authorize", "approve", "post"],
@@ -115,7 +145,7 @@ export var FakeOfficeMail = {
     );
   },
 
-  _getSignatoryDocuments0(
+  _fakeSignatoryDocuments0(
     obj,
     is_sequence_document_process,
     signatory_ids_arr,

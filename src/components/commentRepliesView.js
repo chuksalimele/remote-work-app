@@ -20,7 +20,7 @@ var useStyles = makeStyles({
     overflow: "auto",
   },
   bubble: {
-    width: "100%",
+    maxWidth: "100%",
   },
   time: {
     width: "80px",
@@ -33,18 +33,18 @@ var useStyles = makeStyles({
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    bacgroundColor: blueGrey[300],
+    backgroundColor: blueGrey[300],
   },
   ownerMessage: {
     fontSize: "12px",
   },
   showMoreTextAnchor: {
-    bacgroundColor: grey[600],
+    backgroundColor: grey[600],
   },
   photo: (prop) => ({
-    background: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
+    backgroundColor: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
     width: "40px",
-    height: "440px",
+    height: "40px",
   }),
   dayDivider: {
     marginTop: 3,
@@ -60,7 +60,7 @@ const calendarMsgStrings = {
   lastDay: "[Yesterday] LT",
   sameDay: "LT",
   nextDay: "[Tomorrow] LT",
-  lastWeek: "[last] dddd LT",
+  lastWeek: "[Last] dddd LT",
   nextWeek: "dddd LT",
   sameElse: "ll",
 };
@@ -69,7 +69,7 @@ const calendarDiviiderStrings = {
   lastDay: "[Yesterday]",
   sameDay: "[Today]",
   nextDay: "[Tomorrow]",
-  lastWeek: "[last] dddd",
+  lastWeek: "[Last] dddd",
   nextWeek: "dddd",
   sameElse: "ll",
 };

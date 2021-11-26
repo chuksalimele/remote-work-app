@@ -16,7 +16,7 @@ export default function ReactionIconButton({ type, badgeText, byMe }) {
       <ThumbUpOffAlt />
     ) : type === "dislike" && byMe === true ? (
       <ThumbDownAlt sx={{ color: meColor }} />
-    ) : type === "disklike" ? (
+    ) : type === "dislike" ? (
       <ThumbDownOffAlt />
     ) : null;
 
@@ -27,7 +27,12 @@ export default function ReactionIconButton({ type, badgeText, byMe }) {
     <Tooltip title={toolTipText} placement="bottom">
       <IconButton color="inherit" size="small">
         {badgeText ? (
-          <Badge color="secondary" badgeContent={badgeText} max={999}>
+          <Badge
+            color="secondary"
+            size="small"
+            badgeContent={badgeText}
+            max={999}
+          >
             {icon}
           </Badge>
         ) : (

@@ -65,8 +65,6 @@ const createArrowCsssProps = (
     }
   }
 
-  console.log(obj);
-
   return obj;
 };
 

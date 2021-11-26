@@ -6,23 +6,28 @@ import {
 } from "../../util/Util";
 
 export default function fakeCommentReplies(number) {
+  console.warn(
+    "WARNING!!",
+    "Calling fakeCommentReplies! Are you still testing? If not then please call appropriate function."
+  );
   var arr = [];
+
   for (var i = 0; i < number; i++) {
     var time = new Date().getTime();
     if (i <= 5) {
-      time += (i + 1) * 1000;
-    } else if (i <= 5) {
-      time += (i + 1) * 60 * 1000;
+      time -= (i + 1) * 1000;
     } else if (i <= 10) {
-      time += (i + 1) * 60 * 60 * 1000;
+      time -= (i + 1) * 60 * 1000;
     } else if (i <= 20) {
-      time += (i + 1) * 24 * 60 * 60 * 1000;
+      time -= (i + 1) * 60 * 60 * 1000;
     } else if (i <= 30) {
-      time += (i + 1) * 7 * 24 * 60 * 60 * 1000;
+      time -= (i + 1) * 24 * 60 * 60 * 1000;
     } else if (i <= 40) {
-      time += (i + 1) * 30 * 24 * 60 * 60 * 1000;
+      time -= (i + 1) * 7 * 24 * 60 * 60 * 1000;
+    } else if (i <= 50) {
+      time -= (i + 1) * 30 * 24 * 60 * 60 * 1000;
     } else {
-      time += (i + 1) * 365 * 24 * 60 * 60 * 1000;
+      time -= (i + 1) * 365 * 24 * 60 * 60 * 1000;
     }
 
     var id = randomPickOne([0, 1]);

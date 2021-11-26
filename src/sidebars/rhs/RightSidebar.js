@@ -31,9 +31,6 @@ export default function LeftSidebar(props) {
       overflow="hidden"
       sx={{ ...invertBgColor(theme) }}
     >
-      {/** first add enpty Toolbar just to give space for the appbar */}
-      <Toolbar variant="dense" />
-
       {topRightMemus.map((item) => {
         return (
           <Tooltip title={item.name} placement="left">

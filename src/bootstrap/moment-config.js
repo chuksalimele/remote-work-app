@@ -13,10 +13,10 @@ Moment.globalMoment = moment;
 Moment.globalLocale = "en";
 
 // 'Thu 06-Feb-21 9:20pm' gives ddd DD-MMM-YY h:mma
-var derivedFormatFromSample = parseFormat("Thu 06-Feb-21 9:20pm");
+//var derivedFormatFromSample = parseFormat("Thu 06-Feb-21 9:20pm");//Deprecated Don't do this - causes unexpected result globally
 
 // Set the output format for every react-moment instance.
-Moment.globalFormat = derivedFormatFromSample;
+//Moment.globalFormat = derivedFormatFromSample;//Deprecated Don't do this - causes unexpected result globally
 
 // Set the timezone for every instance.
 //Moment.globalTimezone = "America/Los_Angeles";

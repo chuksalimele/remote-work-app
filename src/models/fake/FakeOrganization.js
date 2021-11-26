@@ -1,5 +1,10 @@
 export var FakeOrganization = {
-  get() {
+  fakeOrganization() {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeOrganization! Are you still testing? If not then please call appropriate function."
+    );
+
     return {
       name: "Organization Name",
       description: "brief description of this orgnizaation",
@@ -8,7 +13,12 @@ export var FakeOrganization = {
     };
   },
 
-  getBranches(obj) {
+  fakeBranches(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeBranches! Are you still testing? If not then please call appropriate function."
+    );
+
     if (typeof obj === "number") {
       obj = { count: obj };
     }
@@ -30,7 +40,12 @@ export var FakeOrganization = {
     return obj;
   },
 
-  getDepartments(obj) {
+  fakeDepartments(obj) {
+    console.warn(
+      "WARNING!!",
+      "Calling fakeDepartments! Are you still testing? If not then please call appropriate function."
+    );
+
     if (typeof obj === "number") {
       obj = { count: obj };
     }

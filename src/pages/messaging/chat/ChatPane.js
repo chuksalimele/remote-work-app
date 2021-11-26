@@ -9,7 +9,7 @@ export default function ChatPane() {
       <Grid item xs={4}>
         <ChatSidebar />
       </Grid>
-      <Grid item xs={8} sx={{ height: "80%" }}>
+      <Grid item xs={8} sx={{ height: "calc(100% - 50px)" }}>
         <ChatViewPanel />
       </Grid>
     </Grid>

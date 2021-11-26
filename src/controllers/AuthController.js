@@ -1,4 +1,4 @@
-import { FakeUser } from "../models/fake/FakeUser";
+import { fakeUsers } from "../models/fake/FakeUsers";
 
 export default new (function () {
   //state
@@ -16,9 +16,15 @@ export default new (function () {
   };
   this.stage = function () {};
 
-  this.AuthUser = function name() {
+  this.fakeAuthUser = null;
+
+  this.AuthUser = function () {
+    if (!this.fakeAuthUser) {
+      //TODO - REMOVE AFTER TESTING
+      this.fakeAuthUser = fakeUsers(1)[0];
+    }
     //TODO - get real user
-    return FakeUser.getUsers(1)[0];
+    return this.fakeAuthUser;
   };
 
   return this;

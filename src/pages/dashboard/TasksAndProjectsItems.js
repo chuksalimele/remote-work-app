@@ -3,12 +3,11 @@ import { Stack, Link, Typography } from "@mui/material";
 import { getPageUrl } from "../../util/Util";
 import BoardItem from "../../components/BoardItem";
 import { Link as RouterLink } from "react-router-dom";
-import { FakeManagement } from "../../models/fake/FakeManagement";
-
-var recentTasks = FakeManagement.getProjects(20); //TODO - TESTING WITH FAKE FOR NOW
-var recentProjects = FakeManagement.getTasks(20); //TODO - TESTING WITH FAKE FOR NOW
+import { fakeProjects, fakeTasks } from "../../models/fake/FakeManagement";
 
 export default function TasksAndProjectsItems(props) {
+  var recentTasks = fakeTasks(20); //TODO - TESTING WITH FAKE FOR NOW
+  var recentProjects = fakeProjects(20); //TODO - TESTING WITH FAKE FOR NOW
   return (
     <BoardItem
       header="Recend Task and Projects"

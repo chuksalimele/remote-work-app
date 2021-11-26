@@ -1,5 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -87,16 +88,12 @@ function TaskToolbar() {
 
 export default function TaskPane() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Stack spacing={2} sx={{ height: "100%", overflow: "hidden" }}>
       <TaskToolbar />
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <TaskListPane />
-        </Grid>
-        <Grid item xs={4}>
-          <TaskParticipantsPane />
-        </Grid>
-      </Grid>
-    </Box>
+      <Stack direction="row" sx={{ height: "100%", overflow: "hidden" }}>
+        <TaskListPane />
+        <TaskParticipantsPane />
+      </Stack>
+    </Stack>
   );
 }

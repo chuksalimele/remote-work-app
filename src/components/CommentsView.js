@@ -6,7 +6,15 @@ import ShowMoreText from "react-show-more-text";
 import { avatarBgColor, getUserById, getUserFullNameById } from "../util/Util";
 import ReactionIconButton from "./ReactionIconButton";
 import { Reply } from "@mui/icons-material";
-import { Avatar, Badge, Button, Divider, Stack } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Button,
+  IconButton,
+  Tooltip,
+  Divider,
+  Stack,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { blueGrey, grey } from "@mui/material/colors";
 import MsgIndicator from "./MsgIndicator";
@@ -17,10 +25,10 @@ var useStyles = makeStyles({
   root: {
     padding: "4px",
     width: "100%",
-    overflow: "auto",
+    height: "100%",
   },
   bubble: {
-    width: "100%",
+    maxWidth: "100%",
   },
   time: {
     width: "80px",
@@ -33,15 +41,15 @@ var useStyles = makeStyles({
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    bacgroundColor: blueGrey[300],
+    backgroundColor: blueGrey[300],
   },
   showMoreTextAnchor: {
-    bacgroundColor: grey[600],
+    backgroundColor: grey[600],
   },
   photo: (prop) => ({
-    background: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
+    backgroundColor: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
     width: "40px",
-    height: "440px",
+    height: "40px",
   }),
   dayDivider: {
     marginTop: 3,
@@ -57,7 +65,7 @@ const calendarMsgStrings = {
   lastDay: "[Yesterday] LT",
   sameDay: "LT",
   nextDay: "[Tomorrow] LT",
-  lastWeek: "[last] dddd LT",
+  lastWeek: "[Last] dddd LT",
   nextWeek: "dddd LT",
   sameElse: "ll",
 };
@@ -66,7 +74,7 @@ const calendarDiviiderStrings = {
   lastDay: "[Yesterday]",
   sameDay: "[Today]",
   nextDay: "[Tomorrow]",
-  lastWeek: "[last] dddd",
+  lastWeek: "[Last] dddd",
   nextWeek: "dddd",
   sameElse: "ll",
 };
@@ -104,17 +112,17 @@ function CommentBubble({ comment }) {
           {fullName ? fullName[0] : ""}
         </Avatar>
       }
-      right={
+      right={<MsgIndicator status={comment.status} />}
+      top={
         <Stack direction="row" spacing={1}>
+          <div className={classes.fullName}>{fullName}</div>
           <Moment
             className={classes.time}
             calendar={calendarMsgStrings}
             date={comment.time}
           />
-          <MsgIndicator status={comment.status} />
         </Stack>
       }
-      top={<div className={classes.fullName}>{fullName}</div>}
       center={
         <ShowMoreText
           lines={MAX_SHOW_LESS_LINES}
@@ -130,7 +138,7 @@ function CommentBubble({ comment }) {
         </ShowMoreText>
       }
       bottom={
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={0.8}>
           {/** Click this button to like comment - a 'like' reaction of user */}
           <ReactionIconButton
             type="like"
@@ -146,15 +154,17 @@ function CommentBubble({ comment }) {
             onClick={OnClickDislike}
           />
           {/** Show a list of users that clicked like or dislike botton */}
-          <Button size="small" onClick={OnClickShowReactions}>
+          <Button
+            size="small"
+            sx={{ fontSize: "10px" }}
+            onClick={OnClickShowReactions}
+          >
             {"Reactions"}
           </Button>
           {/** Show a reply view of those who replied this comment
            * and also make a provision for someone to add reply */}
-          <Button
-            size="small"
-            onClick={OnClickReplies}
-            endIcon={
+          <Tooltip title={"Replies"} placement="bottom">
+            <IconButton color="inherit" size="small" onClick={OnClickReplies}>
               <Badge
                 color="secondary"
                 badgeContent={comment.replyIds.length}
@@ -162,23 +172,28 @@ function CommentBubble({ comment }) {
               >
                 <Reply />
               </Badge>
-            }
-          >
-            {"Replies"}
-          </Button>
+            </IconButton>
+          </Tooltip>
         </Stack>
       }
     />
   );
 }
 
-export default function CommentsView({ comments }) {
+export default function CommentsView({ comments, sx }) {
   const classes = useStyles();
 
   return (
-    <Stack spacing={1} direction="column" className={classes.root}>
+    <Stack
+      spacing={1}
+      direction="column"
+      className={classes.root}
+      sx={sx ? sx : {}}
+    >
       {comments.map((comment, index) => {
-        var MsgBubble = <CommentBubble comment={comment} />;
+        var MsgBubble = (
+          <CommentBubble key={"comment-bubble" + index} comment={comment} />
+        );
 
         var prevComment = comments[index - 1];
         var TimeDivider = null;
@@ -198,7 +213,7 @@ export default function CommentsView({ comments }) {
         }
 
         return TimeDivider ? (
-          <div>
+          <div key={"comment-bubble-with-divider" + index}>
             {TimeDivider} {MsgBubble}
           </div>
         ) : (

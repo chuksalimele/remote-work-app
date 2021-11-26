@@ -23,10 +23,8 @@ export default function MainAppBar(props) {
 
   return (
     <AppBar
-      position="fixed"
+      position="relative"
       sx={{
-        width: { sm: `calc(100% - ${props.offset}px)` },
-        ml: { sm: `${props.offset}px` },
         transition: theme.transitions.create(["width", "margin"], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
