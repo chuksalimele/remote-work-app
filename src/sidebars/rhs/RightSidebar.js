@@ -18,10 +18,11 @@ var spacer = (
   ></Box>
 );
 
-export default function LeftSidebar(props) {
+export default React.forwardRef((props, ref) => {
   const theme = useTheme();
   return (
     <Stack
+      ref={ref}
       height="100%"
       direction="column"
       justifyContent="flex-start"
@@ -61,4 +62,4 @@ export default function LeftSidebar(props) {
       })}
     </Stack>
   );
-}
+});

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { HeadingToolbar, Plate } from "@udecode/plate";
 import { Editable } from "slate-react";
 
-export const MessageEditor = ({
+export default function MessageEditor({
   id,
   autoFocus,
   spellCheck,
   placeholder,
   editableStyle,
   create,
-}) => {
+}) {
   const editableProps = {
     // autoFocus: process.env.NODE_ENV !== 'production',
     autoFocus: !!autoFocus,
@@ -46,6 +46,7 @@ export const MessageEditor = ({
             style={
               editableStyle || {
                 //backgroundColor: "greenyellow",
+                flexGrow: 1,
                 padding: "10px",
                 minHeight: "50px",
                 maxHeight: "200px",
@@ -53,6 +54,7 @@ export const MessageEditor = ({
               }
             }
           >
+            {/**this is the default way according to docs Plate renders Editable on Slate  component*/}
             <Editable {...editableProps} />
           </div>
         )}
@@ -60,4 +62,4 @@ export const MessageEditor = ({
       <HeadingToolbar>{/*<AlignToolbarButtons />*/}</HeadingToolbar>
     </>
   );
-};
+}

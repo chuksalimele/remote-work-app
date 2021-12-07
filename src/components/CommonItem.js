@@ -4,6 +4,7 @@ import * as React from "react";
 export default function CommonItem({
   className,
   sx,
+  ref,
   right,
   left,
   bottom,
@@ -16,6 +17,7 @@ export default function CommonItem({
       direction="row"
       className={className ? className : {}}
       sx={sx ? sx : {}}
+      ref={ref ? ref : null}
     >
       <Stack>{left}</Stack>
       <Stack spacing={1} direction="column">

@@ -1,17 +1,26 @@
 import * as React from "react";
-import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 import ChatSidebar from "./ChatSidebar";
-import ChatViewPanel from "./ChatViewPane";
+import ChatViewPane from "./ChatViewPane";
 
 export default function ChatPane() {
   return (
-    <Grid container spacing={2} sx={{ height: "100%" }}>
-      <Grid item xs={4}>
+    <div
+      style={{
+        display: "flex",
+        height: "100%",
+        width: "100%",
+        overflow: "hidden",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <div style={{ width: "20vw", height: "100%" }}>
         <ChatSidebar />
-      </Grid>
-      <Grid item xs={8} sx={{ height: "calc(100% - 50px)" }}>
-        <ChatViewPanel />
-      </Grid>
-    </Grid>
+      </div>
+      <div style={{ width: "50vw", height: "100%" }}>
+        <ChatViewPane />
+      </div>
+    </div>
   );
 }

@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 var spacer = <Box sx={{ flexGrow: 1 }}></Box>;
 
-export default function MainAppBar(props) {
+export default React.forwardRef((props, ref) => {
   const theme = useTheme();
   const handleMenuIconClick = () => {
     props.sidebarToggleHanlder();
@@ -23,6 +23,7 @@ export default function MainAppBar(props) {
 
   return (
     <AppBar
+      ref={ref}
       position="relative"
       sx={{
         transition: theme.transitions.create(["width", "margin"], {
@@ -71,4 +72,4 @@ export default function MainAppBar(props) {
       </Stack>
     </AppBar>
   );
-}
+});

@@ -29,17 +29,18 @@ var useStyles = makeStyles({
   fullName: {
     fontWeight: 700,
   },
-  message: {
+  message: (prop) => ({
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    backgroundColor: blueGrey[300],
-  },
+    backgroundColor: prop.fromId === auth.AuthUser().id ? blue[100] : grey[100],
+  }),
   ownerMessage: {
+    //the owner comment in focus
     fontSize: "12px",
   },
   showMoreTextAnchor: {
-    backgroundColor: grey[600],
+    backgroundColor: grey[100],
   },
   photo: (prop) => ({
     backgroundColor: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
@@ -47,8 +48,8 @@ var useStyles = makeStyles({
     height: "40px",
   }),
   dayDivider: {
-    marginTop: 3,
-    marginBottom: 3,
+    marginTop: "20px",
+    marginBottom: "20px",
   },
   dayDividerTime: {
     fontSize: "14px",
@@ -121,8 +122,8 @@ function CommentReplyBubble({ comment: reply }) {
       center={
         <ShowMoreText
           lines={MAX_SHOW_LESS_LINES}
-          more="Show more >>"
-          less="<< Show less"
+          more="More"
+          less="Less"
           className={classes.message}
           anchorClass={classes.showMoreTextAnchor}
           onClick={OnClickMessage}
@@ -223,34 +224,80 @@ export default function CommentRepliesView({ comment }) {
 
   var replies = getReplies(comment.replyIds);
 
+  const chunkSize = 10;
+  const initialState = {
+    items: replies.slice(0, chunkSize),
+    hasMore: chunkSize < replies.length,
+  };
+
+  const [state, setState] = useState(initialState);
+
+  const nextItems = (items) => {
+    var size = replies.length - items.length;
+    size = size > chunkSize ? chunkSize : size;
+    return replies.slice(0, items.length + size); //COME BACK TO CHECK FOR CORRECTNESS
+  };
+
+  const fetchMoreData = () => {
+    //we can asynchronously fetch more data here
+
+    setState({
+      items: nextItems(state.items),
+      hasMore: state.items.length < replies.length,
+    });
+  };
+
+  var scrollable_id = "scrollable-reply-view-container";
+
   return (
-    <Stack spacing={1} direction="column" className={classes.root}>
-      <OwnerCommentItem comment={comment} expandComment />
-      {replies.map((reply, index) => {
-        var MsgBubble = <CommentReplyBubble reply={reply} />;
-
-        var prevReply = replies[index - 1];
-        var TimeDivider = null;
-        if (index === 0 || !moment(prevReply.time).isSame(index.time, "day")) {
-          TimeDivider = (
-            <Divider className={classes.dayDivider}>
-              <Moment
-                className={classes.dayDividerTime}
-                calendar={calendarDiviiderStrings}
-                date={reply.time}
-              />
-            </Divider>
-          );
+    <Stack
+      id={scrollable_id}
+      spacing={1}
+      direction="column"
+      className={classes.root}
+    >
+      <InfiniteScroll
+        dataLength={state.items.length}
+        next={fetchMoreData}
+        hasMore={state.hasMore}
+        loader={<h4>Loading...</h4>}
+        scrollableTarget={scrollable_id}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
         }
+      >
+        <OwnerCommentItem comment={comment} expandComment />
+        {replies.map((reply, index) => {
+          var MsgBubble = <CommentReplyBubble reply={reply} />;
 
-        return TimeDivider ? (
-          <div>
-            {TimeDivider} {MsgBubble}
-          </div>
-        ) : (
-          MsgBubble
-        );
-      })}
+          var prevReply = replies[index - 1];
+          var TimeDivider = null;
+          if (
+            index === 0 ||
+            !moment(prevReply.time).isSame(index.time, "day")
+          ) {
+            TimeDivider = (
+              <Divider className={classes.dayDivider}>
+                <Moment
+                  className={classes.dayDividerTime}
+                  calendar={calendarDiviiderStrings}
+                  date={reply.time}
+                />
+              </Divider>
+            );
+          }
+
+          return TimeDivider ? (
+            <div>
+              {TimeDivider} {MsgBubble}
+            </div>
+          ) : (
+            MsgBubble
+          );
+        })}
+      </InfiniteScroll>
     </Stack>
   );
 }

@@ -10,23 +10,11 @@ export default function fakeChats(number) {
   var n50 = 10;
   var n60 = 10;
 
+  var time = new Date().getTime();
+
   for (var i = number - 1; i > -1; i--) {
-    var time = new Date().getTime();
-    if (i <= 5) {
-      time -= --n5 * 1000;
-    } else if (i <= 10) {
-      time -= --n10 * 60 * 1000;
-    } else if (i <= 20) {
-      time -= --n20 * 60 * 60 * 1000;
-    } else if (i <= 30) {
-      time -= --n30 * 24 * 60 * 60 * 1000;
-    } else if (i <= 40) {
-      time -= --n40 * 7 * 24 * 60 * 60 * 1000;
-    } else if (i <= 50) {
-      time -= --n50 * 30 * 24 * 60 * 60 * 1000;
-    } else {
-      time -= --n60 * 365 * 24 * 60 * 60 * 1000;
-    }
+    var n = 1;
+    time -= n * 60 * 60 * 1000;
 
     //var id = randomPickOne([0, 1]);
 
@@ -37,7 +25,8 @@ export default function fakeChats(number) {
     var obj = {
       fromId: id,
       toId: id === 0 ? 1 : 0,
-      message: randomWords(2, 2, "a"),
+      messageId: "chat_id_" + i,
+      message: randomWords(5, 80, "a"),
       status: randomPickOne(["failed", "error", "sent", "seen", "delivered"]),
       time: time,
     };

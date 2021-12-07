@@ -19,7 +19,7 @@ import { getPageUrl, invertBgColor } from "../../util/Util";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
-export default function LeftSidebar(props) {
+export default React.forwardRef((props, ref) => {
   const theme = useTheme();
   var obj = {};
   for (var n in LeftMenuData) {
@@ -45,8 +45,9 @@ export default function LeftSidebar(props) {
 
   return (
     <List
+      ref={ref}
       sx={{
-        width: 240,
+        width: props.width,
         height: "100vh",
         bgcolor: `${theme.palette.primary.main}`,
 
@@ -137,4 +138,4 @@ export default function LeftSidebar(props) {
       <LeftMoreMenu items={LeftMenuData} />
     </List>
   );
-}
+});

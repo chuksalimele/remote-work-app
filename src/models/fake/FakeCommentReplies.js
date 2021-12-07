@@ -34,6 +34,7 @@ export default function fakeCommentReplies(number) {
     var obj = {
       fromId: id,
       toId: id === 0 ? 1 : 0,
+      messageId: "comment_reply_id_" + i,
       message: randomWords(5, 40, "c"),
       replyIds: randomPickN(serialNumbers(1, 10), 7),
       likeIds: randomPickN(serialNumbers(1, 10), 7),

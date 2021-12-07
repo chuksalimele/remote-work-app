@@ -9,27 +9,36 @@ import auth from "../controllers/AuthController";
 import { avatarBgColor, getUserById, getUserFullNameById } from "../util/Util";
 import { makeStyles } from "@mui/styles";
 import { blue, blueGrey, grey } from "@mui/material/colors";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useState } from "react";
 
-var MAX_SHOW_LESS_LINES = 7;
+var MAX_SHOW_LESS_LINES = 2;
 
 var useStyles = makeStyles({
   root: {
     padding: "4px",
     overflow: "auto",
-    width: "100%",
-    height: "100%",
   },
   bubbleSent: {
-    maxWidth: "75%",
+    maxWidth: "40vw", //Workaround!!! measure with viewport rather than percentage since we are using flexbox model. So as to avoid distortion of the layout when message expands or during window resize
+    marginBottom: "10px",
   },
 
   bubbleReceived: {
-    maxWidth: "75%",
+    maxWidth: "40vw", //Workaround!!! measure with viewport rather than percentage since we are using flexbox model. So as to avoid distortion of the layout when message expands or during window resize
     marginLeft: 0,
+    marginBottom: "10px",
   },
-  time: {
-    width: "80px",
+  timeSent: {
+    width: "120px",
     fontSize: "10px",
+    textAlign: "right",
+    marginRight: "5px",
+  },
+  timeReceive: {
+    width: "120px",
+    fontSize: "10px",
+    textAlign: "left",
   },
   fullName: {
     fontWeight: 700,
@@ -38,17 +47,16 @@ var useStyles = makeStyles({
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    backgroundColor: blue[300],
+    backgroundColor: blue[100],
   },
   messageReceived: {
-    display: "inline",
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    backgroundColor: blueGrey[300],
+    backgroundColor: grey[100],
   },
   showMoreTextAnchor: {
-    backgroundColor: grey[600],
+    backgroundColor: "inherit",
   },
   photo: (prop) => ({
     backgroundColor: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
@@ -56,8 +64,8 @@ var useStyles = makeStyles({
     height: "30px",
   }),
   dayDivider: {
-    marginTop: 3,
-    marginBottom: 3,
+    marginTop: "20px",
+    marginBottom: "20px",
   },
   dayDividerTime: {
     fontSize: "14px",
@@ -102,8 +110,8 @@ function ChatSentBubble({ chat }) {
           <ShowMoreText
             /* Default options */
             lines={MAX_SHOW_LESS_LINES}
-            more="Show more >>"
-            less="<< Show less"
+            more="More"
+            less="Less"
             className={classes.messageSent}
             anchorClass={classes.showMoreTextAnchor}
             onClick={OnClickMessage}
@@ -119,7 +127,7 @@ function ChatSentBubble({ chat }) {
             sx={{ display: "flex", justifyContent: "flex-end", pr: "2px" }}
           >
             <Moment
-              className={classes.time}
+              className={classes.timeSent}
               calendar={calendarMsgStrings}
               date={chat.time}
             />
@@ -157,8 +165,8 @@ function ChatReceivedBubble({ chat }) {
         <span>
           <ShowMoreText
             lines={MAX_SHOW_LESS_LINES}
-            more="Show more >>"
-            less="<< Show less"
+            more="More"
+            less="Less"
             className={classes.messageReceived}
             anchorClass={classes.showMoreTextAnchor}
             onClick={OnClickMessage}
@@ -170,7 +178,7 @@ function ChatReceivedBubble({ chat }) {
         </span>
       }
       bottom={
-        <Moment className={classes.time} calendar={calendarMsgStrings}>
+        <Moment className={classes.timeReceive} calendar={calendarMsgStrings}>
           {chat.time}
         </Moment>
       }
@@ -179,43 +187,97 @@ function ChatReceivedBubble({ chat }) {
 }
 
 export default function ChatsView({ sx, chats }) {
+  const sortedChats = [...chats].sort((a, b) => b.time - a.time);
   const classes = useStyles();
+  const chunkSize = 10;
+  const initialState = {
+    items: sortedChats.slice(0, chunkSize),
+    hasMore: chunkSize < sortedChats.length,
+  };
+
+  const [state, setState] = useState(initialState);
+
+  const nextItems = (items) => {
+    var size = sortedChats.length - items.length;
+    size = size > chunkSize ? chunkSize : size;
+    return sortedChats.slice(0, items.length + size); //COME BACK TO CHECK FOR CORRECTNESS
+  };
+
+  const fetchMoreData = () => {
+    //we can asynchronously fetch more data here
+    setTimeout(() => {
+      setState({
+        items: nextItems(state.items),
+        hasMore: state.items.length < sortedChats.length,
+      });
+    }, 1500); // add this delay to show the Loading indication - NOTE if we are getting the data from the network then remove the delay as the network dealy is enough to show the Loading indicator
+  };
+
+  var scrollable_id = "scrollable-chat-view-container";
 
   return (
-    <Stack spacing={1} direction="column" className={classes.root}>
-      {chats.map((chat, index) => {
-        var MsgBubble = null;
+    <Stack
+      id={scrollable_id}
+      style={{
+        display: "flex",
+        flexDirection: "column-reverse", //required to enabble the InfiniteScroll component put the scroll bar on te bottom
+      }}
+      spacing={1}
+      direction="column"
+      className={classes.root}
+    >
+      {/*Put the scroll bar always on the bottom*/}
+      <InfiniteScroll
+        dataLength={state.items.length}
+        next={fetchMoreData}
+        style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
+        inverse={true} //
+        hasMore={state.hasMore}
+        loader={<h4>Loading...</h4>}
+        scrollableTarget={scrollable_id}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        {state.items.map((chat, index) => {
+          var MsgBubble = null;
 
-        if (chat.fromId === auth.AuthUser().id) {
-          //sent by the app user
-          MsgBubble = <ChatSentBubble chat={chat} />;
-        } else if (chat.toId === auth.AuthUser().id) {
-          //sent to the app user
-          MsgBubble = <ChatReceivedBubble chat={chat} />;
-        } else {
-          return null;
-        }
-        var prevChat = chats[index - 1];
-        var TimeDivider = null;
-        if (index === 0 || !moment(prevChat.time).isSame(chat.time, "day")) {
-          TimeDivider = (
-            <Divider className={classes.dayDivider}>
-              <Moment
-                className={classes.dayDividerTime}
-                calendar={calendarDiviiderStrings}
-                date={chat.time}
-              />
-            </Divider>
+          if (chat.fromId === auth.AuthUser().id) {
+            //sent by the app user
+            MsgBubble = <ChatSentBubble chat={chat} />;
+          } else if (chat.toId === auth.AuthUser().id) {
+            //sent to the app user
+            MsgBubble = <ChatReceivedBubble chat={chat} />;
+          } else {
+            return null;
+          }
+          var nextChat = state.items[index + 1];
+          var TimeDivider = null;
+          if (
+            (nextChat && !moment(nextChat.time).isSame(chat.time, "day")) ||
+            index === state.items.length - 1
+          ) {
+            TimeDivider = (
+              <Divider className={classes.dayDivider}>
+                <Moment
+                  className={classes.dayDividerTime}
+                  calendar={calendarDiviiderStrings}
+                  date={chat.time}
+                />
+              </Divider>
+            );
+          }
+          return TimeDivider ? (
+            <div>
+              {TimeDivider} {MsgBubble}
+            </div>
+          ) : (
+            MsgBubble
           );
-        }
-        return TimeDivider ? (
-          <div>
-            {TimeDivider} {MsgBubble}
-          </div>
-        ) : (
-          MsgBubble
-        );
-      })}
+        })}
+      </InfiniteScroll>
     </Stack>
   );
 }

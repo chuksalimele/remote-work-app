@@ -6,7 +6,6 @@ import ShowMoreText from "react-show-more-text";
 import { avatarBgColor, getUserById, getUserFullNameById } from "../util/Util";
 import ReactionIconButton from "./ReactionIconButton";
 import { Reply } from "@mui/icons-material";
-import auth from "../controllers/AuthController";
 import {
   Avatar,
   Badge,
@@ -17,12 +16,10 @@ import {
   Stack,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { blue, blueGrey, grey } from "@mui/material/colors";
+import { blueGrey, grey } from "@mui/material/colors";
 import MsgIndicator from "./MsgIndicator";
 //import LazyLoad from "react-lazyload";
 import { LazyLoad, useVisibilityHook } from "react-observer-api";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useState } from "react";
 
 var MAX_SHOW_LESS_LINES = 7;
 
@@ -42,14 +39,14 @@ var useStyles = makeStyles({
   fullName: {
     fontWeight: 700,
   },
-  message: (prop) => ({
+  message: {
     fontSize: "12px",
     padding: "5px",
     borderRadius: "2px",
-    backgroundColor: prop.fromId === auth.AuthUser().id ? blue[100] : grey[100],
-  }),
+    backgroundColor: blueGrey[300],
+  },
   showMoreTextAnchor: {
-    backgroundColor: grey[100],
+    backgroundColor: grey[600],
   },
   photo: (prop) => ({
     backgroundColor: avatarBgColor(prop.fullName), //remember we passed the fullName as prop - see comment below
@@ -57,8 +54,8 @@ var useStyles = makeStyles({
     height: "40px",
   }),
   dayDivider: {
-    marginTop: "20px",
-    marginBottom: "20px",
+    marginTop: 3,
+    marginBottom: 3,
   },
   dayDividerTime: {
     fontSize: "14px",
@@ -84,7 +81,7 @@ const calendarDiviiderStrings = {
   sameElse: "ll",
 };
 
-function CommentBubble({ comment }) {
+function CommentBubble({ comment, ref }) {
   var user = getUserById(comment.fromId);
   var appUserId = user.id;
   var fullName = user ? getUserFullNameById(appUserId) : "";
@@ -111,6 +108,7 @@ function CommentBubble({ comment }) {
 
   return (
     <CommonItem
+      ref={ref ? ref : null}
       className={classes.bubble}
       left={
         <Avatar className={classes.photo} src={photoUrl}>
@@ -131,8 +129,8 @@ function CommentBubble({ comment }) {
       center={
         <ShowMoreText
           lines={MAX_SHOW_LESS_LINES}
-          more="More"
-          less="Less"
+          more="Show more >>"
+          less="<< Show less"
           className={classes.message}
           anchorClass={classes.showMoreTextAnchor}
           onClick={OnClickMessage}
@@ -186,95 +184,63 @@ function CommentBubble({ comment }) {
 }
 
 export default function CommentsView({ comments, sx }) {
-  const sortedComments = [...comments].sort((a, b) => b.time - a.time);
   const classes = useStyles();
-  const chunkSize = 5;
-  const initialState = {
-    items: sortedComments.slice(0, chunkSize),
-    hasMore: chunkSize < sortedComments.length,
-  };
+  const loadingRef = React.useRef();
 
-  const [state, setState] = useState(initialState);
+  const { setElement, isVisible } = useVisibilityHook({
+    threshold: 0,
+  });
 
-  const nextItems = (items) => {
-    var size = sortedComments.length - items.length;
-    size = size > chunkSize ? chunkSize : size;
-    return sortedComments.slice(0, items.length + size); //COME BACK TO CHECK FOR CORRECTNESS
-  };
-
-  const fetchMoreData = () => {
-    //we can asynchronously fetch more data here
-    setTimeout(() => {
-      setState({
-        items: nextItems(state.items),
-        hasMore: state.items.length < sortedComments.length,
-      });
-    }, 1500); // add this delay to show the Loading indication - NOTE if we are getting the data from the network then remove the delay as the network dealy is enough to show the Loading indicator
-  };
-
-  var scrollable_id = "scrollable-comment-view-container";
+  React.useEffect(() => {
+    if (isVisible) {
+      //alert("Now visible in tthe dom");
+      loadingRef.current.style.display = "none";
+    }
+  }, [isVisible]);
 
   return (
     <Stack
-      id={scrollable_id}
-      style={{
-        display: "flex",
-        flexDirection: "column-reverse", //required to enabble the InfiniteScroll component put the scroll bar on te bottom
-      }}
       spacing={1}
       direction="column"
       className={classes.root}
       sx={sx ? sx : {}}
     >
-      {/*Put the scroll bar always on the bottom*/}
-      <InfiniteScroll
-        dataLength={state.items.length}
-        next={fetchMoreData}
-        style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
-        inverse={true} //
-        hasMore={state.hasMore}
-        loader={<h4>Loading...</h4>}
-        scrollableTarget={scrollable_id}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
+      <div ref={loadingRef}>{"Loading..."}</div>
+      {comments.map((comment, index) => {
+        var MsgBubble = (
+          <CommentBubble key={"comment-bubble" + index} comment={comment} />
+        );
+
+        var prevComment = comments[index - 1];
+        var TimeDivider = null;
+        if (
+          index === 0 ||
+          !moment(prevComment.time).isSame(comment.time, "day")
+        ) {
+          TimeDivider = (
+            <Divider className={classes.dayDivider}>
+              <Moment
+                className={classes.dayDividerTime}
+                calendar={calendarDiviiderStrings}
+                date={comment.time}
+              />
+            </Divider>
+          );
         }
-      >
-        {state.items.map((comment, index) => {
-          var MsgBubble = (
-            <CommentBubble key={"comment-bubble" + index} comment={comment} />
-          );
 
-          var nextComment = state.items[index + 1];
-          var TimeDivider = null;
-          if (
-            (nextComment &&
-              !moment(nextComment.time).isSame(comment.time, "day")) ||
-            index === state.items.length - 1
-          ) {
-            TimeDivider = (
-              <Divider className={classes.dayDivider}>
-                <Moment
-                  className={classes.dayDividerTime}
-                  calendar={calendarDiviiderStrings}
-                  date={comment.time}
-                />
-              </Divider>
-            );
-          }
+        var compView = TimeDivider ? (
+          <div
+            ref={index == 0 ? setElement : null}
+            key={"comment-bubble-with-divider" + index}
+          >
+            {TimeDivider} {MsgBubble}
+          </div>
+        ) : (
+          MsgBubble
+        );
 
-          var compView = TimeDivider ? (
-            <div key={"comment-bubble-with-divider" + index}>
-              {TimeDivider} {MsgBubble}
-            </div>
-          ) : (
-            MsgBubble
-          );
-
-          return compView;
-        })}
-      </InfiniteScroll>
+        return <LazyLoad>{compView}</LazyLoad>;
+      })}
     </Stack>
   );
 }

@@ -11,9 +11,20 @@ import Select from "@mui/material/Select";
 import UserList from "../../../components/UserList";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Stack } from "@mui/material";
-import CommentsView from "../../../components/CommentsView";
-import { MessageEditor } from "../../../components/MessageEditor";
 import fakeComments from "../../../models/fake/FakeComments";
+import Loader from "../../../components/Loader";
+import { Suspense } from "react";
+import ErrorBoundary from "../../../components/ErrorBoundary";
+
+import CommentsView from "../../../components/CommentsView.js";
+/*const CommentsView = React.lazy(() =>
+  import("../../../components/CommentsView")
+);*/
+
+import MessageEditor from "../../../components/MessageEditor";
+/*const MessageEditor = React.lazy(() =>
+  import("../../../components/MessageEditor")
+);*/
 
 var participants = []; //TODO
 
@@ -67,7 +78,7 @@ function ParticipantsCommentPane() {
     <Stack
       spacing={0}
       sx={{
-       width: "100%",
+        width: "100%",
         height: "400px",
         overflow: "hidden",
       }}
@@ -98,7 +109,6 @@ function ParticipantsCommentPane() {
         testing testing testing testing testing testing testing testing testing
         testing testing testing testing testing END
       </div> */}
-
       <CommentsView
         comments={comments}
         sx={{ height: "100%", overflowY: "auto" }}

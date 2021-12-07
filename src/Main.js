@@ -10,6 +10,12 @@ import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { pageRoutes } from "./models/PageRoutes";
 import { Divider, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { Suspense } from "react";
+import Loader from "./components/Loader";
+import { useEffect } from "react";
+import { useRef } from "react";
+import { useState } from "react";
 
 function PageContentPane() {
   const handleGoBack = (evt) => {};
@@ -20,30 +26,47 @@ function PageContentPane() {
     <Switch>
       {pageRoutes.map((route) => (
         <Route key={route.name} exact path={route.url}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h6" component="div">
-              {route.name}
-            </Typography>
+          <Stack
+            sx={{
+              display: "flex",
+              height: "100%",
+              width: "100%",
+              overflow: "hidden",
+            }}
+          >
+            <Stack direction="row" spacing={2}>
+              <Typography variant="h6" component="div">
+                {route.name}
+              </Typography>
 
-            <Tooltip title="Previous content" placement="bottom">
-              <IconButton color="inherit" size="small" onClick={handleGoBack}>
-                <ArrowBack />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Previous content" placement="bottom">
+                <IconButton color="inherit" size="small" onClick={handleGoBack}>
+                  <ArrowBack />
+                </IconButton>
+              </Tooltip>
 
-            <Tooltip title="Next content" placement="bottom">
-              <IconButton
-                color="inherit"
-                size="small"
-                onClick={handleGoForward}
-              >
-                <ArrowForward />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Next content" placement="bottom">
+                <IconButton
+                  color="inherit"
+                  size="small"
+                  onClick={handleGoForward}
+                >
+                  <ArrowForward />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+            <Divider sx={{ mt: 0.5, mb: 0.5 }} />
+
+            <Box
+              sx={{
+                flexGrow: 1,
+                width: "100%",
+                overflow: "hidden",
+              }}
+            >
+              <Suspense fallback={<Loader />}>{route.component}</Suspense>
+            </Box>
           </Stack>
-
-          <Divider sx={{ mt: 0.5, mb: 0.5 }} />
-          {route.component}
         </Route>
       ))}
     </Switch>
@@ -51,63 +74,76 @@ function PageContentPane() {
 }
 
 export default function Main(prop) {
-  const [sidebarToggle, setSidebarToggle] = React.useState(false);
+  console.log("main");
+  const SIDE_BAR_WIDE_WIDTH = 240;
+  const SIDE_BAR_MINI_WIDTH = 100;
+
+  const [sidebarCollapsedIn, setSidebarCollapsedIn] = useState(false);
 
   const handleSidebarToggle = () => {
-    setSidebarToggle(!sidebarToggle);
-  };
-
-  const getSidebarWidth = () => {
-    return sidebarToggle ? 100 : 240;
+    setSidebarCollapsedIn(!sidebarCollapsedIn);
   };
 
   return (
-    <Router>
-      <Stack
-        direction="row"
-        sx={{
-          display: "flex",
-          width: "100vw",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <Collapse orientation="horizontal" in={sidebarToggle} collapsedSize={0}>
-          <LeftSidebarMini />
-        </Collapse>
-
-        <Collapse
-          orientation="horizontal"
-          in={!sidebarToggle}
-          collapsedSize={0}
+    <ErrorBoundary>
+      <Router>
+        <Stack
+          direction="row"
+          sx={{
+            display: "flex",
+            flexBasis: "100vw", //which is the width in flexbox model
+            height: "100vh",
+            maxWidth: "100vw",
+            maxHeight: "100vh",
+            minWidth: "100vw",
+            minHeight: "100vh",
+            overflow: "hidden",
+          }}
         >
-          <LeftSidebar />
-        </Collapse>
+          <Collapse
+            orientation="horizontal"
+            in={sidebarCollapsedIn}
+            collapsedSize={0}
+          >
+            <LeftSidebarMini width={SIDE_BAR_MINI_WIDTH} />
+          </Collapse>
 
-        <Stack direction="column" sx={{ display: "flex", flexGrow: 1 }}>
-          <MainAppBar
-            sidebarToggleHanlder={handleSidebarToggle}
-            offset={getSidebarWidth()}
-          />
-          <Stack direction="row" sx={{ flexGrow: 1 }}>
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                overflow: "hidden",
-                height: `calc(100vh - 45px)`,
-                pt: 0,
-                pb: 2,
-                pl: 2,
-                pr: 2,
-              }}
+          <Collapse
+            orientation="horizontal"
+            in={!sidebarCollapsedIn}
+            collapsedSize={0}
+          >
+            <LeftSidebar width={SIDE_BAR_WIDE_WIDTH} />
+          </Collapse>
+
+          <Stack
+            direction="column"
+            sx={{ flexGrow: 1, height: "100%", overflow: "hidden" }}
+          >
+            <MainAppBar sidebarToggleHanlder={handleSidebarToggle} />
+            <Stack
+              direction="row"
+              sx={{ flexGrow: 1, width: "100%", overflow: "hidden" }}
             >
-              <PageContentPane />
-            </Box>
-            <RightSidebar />
+              <Box
+                component="main"
+                sx={{
+                  flexGrow: 0,
+                  pt: 0,
+                  pb: 0,
+                  pl: 2,
+                  pr: 2,
+                  width: "100%",
+                  overflow: "hidden",
+                }}
+              >
+                <PageContentPane />
+              </Box>
+              <RightSidebar />
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
-    </Router>
+      </Router>
+    </ErrorBoundary>
   );
 }
